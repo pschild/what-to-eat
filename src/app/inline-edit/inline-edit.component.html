@@ -1,0 +1,10 @@
+<div>
+    <div *ngIf="!editMode" (click)="handleLabelClicked()">{{ value }}</div>
+    <div *ngIf="editMode">
+        <input type="text" [(ngModel)]="value" />
+        <div>
+            <button (click)="handleAbortClicked()">abort</button>
+            <button (click)="handleSaveClicked()" [disabled]="value.length === 0">save</button>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,4 @@
-<app-dish-list [dishes]="dishes" (deleteDishEvent)="deleteDish($event)"></app-dish-list>
+<h2>Gerichte</h2>
+<app-inline-edit [value]="'Neues Gericht hinzufügen...'" [resetValueAfterSave]="true" [clearValueOnEdit]="true" (saveEvent)="createDish($event)"></app-inline-edit>
+
+<app-dish-list [dishes]="dishes" (deleteDishEvent)="deleteDish($event)" (updateDishEvent)="updateDish($event)"></app-dish-list>

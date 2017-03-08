@@ -20,6 +20,28 @@ export class AppEffects {
                 })
         );
 
+    @Effect() createDishEffects$ = this.actions$
+        .ofType(actions.CREATE_DISH)
+        .map((action) => action.payload)
+        .switchMap(
+            (dishName) => this.dishService.createDish({ name: dishName })
+                .map(dish => actions.createDishSuccessAction(dish))
+                .catch((error) => {
+                    return Observable.of(actions.createDishErrorAction(error));
+                })
+        );
+
+    @Effect() updateDishEffects$ = this.actions$
+        .ofType(actions.UPDATE_DISH)
+        .map((action) => action.payload)
+        .switchMap(
+            (data) => this.dishService.updateDish(data)
+                .map(dish => actions.updateDishSuccessAction(dish))
+                .catch((error) => {
+                    return Observable.of(actions.updateDishErrorAction(error));
+                })
+        );
+
     @Effect() deleteDishEffects$ = this.actions$
         .ofType(actions.DELETE_DISH)
         .map((action) => action.payload)

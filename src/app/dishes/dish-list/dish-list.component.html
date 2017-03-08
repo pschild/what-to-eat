@@ -1,6 +1,4 @@
-<h2>Gerichte</h2>
-
 <div *ngFor="let dish of dishes">
-    {{ dish.name }}
+    <app-inline-edit [(value)]="dish.name" (saveEvent)="updateDish(dish, $event)"></app-inline-edit>
     <button (click)="handleDeleteDishClicked(dish)">X</button>
 </div>

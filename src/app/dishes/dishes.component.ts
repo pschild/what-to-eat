@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {AppState} from "../shared/reducers";
 import {Dish} from "./dish.model";
-import {deleteDishAction} from "./dishes.actions";
+import {deleteDishAction, createDishAction, updateDishAction} from "./dishes.actions";
 
 @Component({
     selector: 'app-dishes',
@@ -22,6 +22,14 @@ export class DishesComponent implements OnInit {
                 this.dishes = dishState.dishList;
             }
         )
+    }
+
+    createDish(name: string) {
+        this.store.dispatch(createDishAction(name));
+    }
+
+    updateDish(data: any) {
+        this.store.dispatch(updateDishAction(data.dish, data.newName));
     }
 
     deleteDish(dish: Dish) {
