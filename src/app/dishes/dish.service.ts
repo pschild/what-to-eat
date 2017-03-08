@@ -10,7 +10,7 @@ export class DishService {
     }
 
     getDishes(): Observable<Dish[]> {
-        return this.http.get('http://localhost:4200/assets/dishes.json')
+        return this.http.get('http://localhost:8081/dishes')
             .map((res: Response) => {
                 return <Dish[]>res.json();
             });
