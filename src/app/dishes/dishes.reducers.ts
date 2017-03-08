@@ -23,6 +23,25 @@ export const DishesReducer: ActionReducer<DishState> = (state = initialDishState
             newState.dishList = action.payload;
             newState.isDishListLoaded = true;
             return newState;
+
+        case DishesActions.GET_DISHES_ERROR:
+            console.error('Error while getting dishes...');
+            return state;
+
+        case DishesActions.DELETE_DISH:
+            return state;
+
+        case DishesActions.DELETE_DISH_SUCCESS:
+            newState = Object.assign({}, state);
+            newState.dishList = newState.dishList.filter(dish => {
+                return dish.id !== action.payload;
+            });
+            return newState;
+
+        case DishesActions.DELETE_DISH_ERROR:
+            console.error('Error while deleting a dish...');
+            return state;
+
         default:
             return state;
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from "@angular/core";
 import {Dish} from "../dish.model";
 
 @Component({
@@ -6,13 +6,16 @@ import {Dish} from "../dish.model";
     templateUrl: 'dish-list.component.html',
     styleUrls: ['dish-list.component.css']
 })
-export class DishListComponent implements OnInit {
+export class DishListComponent {
 
     @Input() dishes: Dish[];
 
+    @Output() deleteDishEvent = new EventEmitter();
+
     constructor() { }
 
-    ngOnInit() {
+    handleDeleteDishClicked(dish: Dish) {
+        this.deleteDishEvent.emit(dish);
     }
 
 }

@@ -19,4 +19,15 @@ export class AppEffects {
                     return Observable.of(actions.getDishesError(error));
                 })
         );
+
+    @Effect() deleteDishEffects$ = this.actions$
+        .ofType(actions.DELETE_DISH)
+        .map((action) => action.payload)
+        .switchMap(
+            (dish) => this.dishService.deleteDish(dish)
+            .map(response => actions.deleteDishSuccessAction(response.deletedId))
+            .catch((error) => {
+                return Observable.of(actions.deleteDishErrorAction(error));
+            })
+        );
 }

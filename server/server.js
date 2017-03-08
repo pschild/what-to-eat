@@ -63,7 +63,7 @@ app.delete('/dishes', function (req, res) {
 
 app.delete('/dish/:id', function (req, res) {
     db.run("DELETE FROM dish WHERE id=?", +req.params.id, function (err) {
-        res.json({success: true});
+        res.json({deletedId: +req.params.id});
     });
 });
 
