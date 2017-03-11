@@ -13,6 +13,8 @@ export class DishesComponent implements OnInit {
 
     dishes: Dish[];
 
+    newDishName: string;
+
     constructor(private store: Store<AppState>) {
     }
 
@@ -24,8 +26,9 @@ export class DishesComponent implements OnInit {
         )
     }
 
-    createDish(name: string) {
-        this.store.dispatch(createDishAction(name));
+    createDish() {
+        this.store.dispatch(createDishAction(this.newDishName));
+        this.newDishName = '';
     }
 
     updateDish(data: any) {

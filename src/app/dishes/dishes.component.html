@@ -1,4 +1,5 @@
 <h2>Gerichte</h2>
-<app-inline-edit [value]="'Neues Gericht hinzufügen...'" [resetValueAfterSave]="true" [clearValueOnEdit]="true" (saveEvent)="createDish($event)"></app-inline-edit>
+<input type="text" placeholder="Neues Gericht..." [(ngModel)]="newDishName" />
+<button (click)="createDish()">+</button>
 
 <app-dish-list [dishes]="dishes" (deleteDishEvent)="deleteDish($event)" (updateDishEvent)="updateDish($event)"></app-dish-list>
