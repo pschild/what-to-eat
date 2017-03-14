@@ -20,6 +20,34 @@ export class DishPouchService {
         this.remoteDb = new PouchDB('http://localhost:5984/dishes');
 
         this.currentDb = this.remoteDb;
+        this.addNetworkStatusChangeListeners();
+    }
+
+    addNetworkStatusChangeListeners() {
+        let offline = Observable.fromEvent(window, 'offline');
+        let online = Observable.fromEvent(window, 'online');
+
+        offline.subscribe(() => {
+            this.currentDb = this.localDb;
+        });
+
+        online.subscribe(() => {
+            this.currentDb = this.remoteDb;
+            PouchDB.sync('dishes', 'http://localhost:5984/dishes')
+                .on('change', function (info) {
+                    console.log('change', info);
+                }).on('paused', function (err) {
+                    console.log('paused', err);
+                }).on('active', function () {
+                    console.log('active');
+                }).on('denied', function (err) {
+                    console.log('denied', err);
+                }).on('complete', function (info) {
+                    console.log('complete', info);
+                }).on('error', function (err) {
+                    console.log('error', err);
+                });
+        });
     }
 
     getDishes(): Observable<Dish[]> {

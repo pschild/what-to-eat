@@ -14,6 +14,10 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.addNetworkStatusChangeListeners();
+    }
+
+    addNetworkStatusChangeListeners() {
         let offline = Observable.fromEvent(window, 'offline');
         let online = Observable.fromEvent(window, 'online');
 
