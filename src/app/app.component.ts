@@ -18,19 +18,5 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.store.dispatch(getDishes());
-
-        this.pouchService.createDish({ _id: `mydoc-${new Date().toISOString()}`, name: `Kartoffeln-${new Date().toISOString()}` }).subscribe(
-            (result) => console.log(result),
-            (error) => console.error(error),
-            () => console.log('complete')
-        );
-
-        this.pouchService.getDishes().subscribe(
-            (result) => console.log(result),
-            (error) => console.error(error),
-            () => console.log('complete')
-        );
-
-        PouchDB.sync('dishes', 'http://localhost:5984/dishes');
     }
 }
