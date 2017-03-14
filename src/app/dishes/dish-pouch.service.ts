@@ -3,23 +3,38 @@ import {Observable, Observer} from "rxjs";
 import {Dish} from "./dish.model";
 
 import * as PouchDB from 'pouchdb';
+import {
+    IPouchDBAllDocsResult, IPouchDBPutResult, IPouchDBGetResult,
+    IPouchDBRemoveResult
+} from "../shared/pouch-db-interfaces";
 
 @Injectable()
 export class DishPouchService {
 
+    private currentDb;
     private localDb;
     private remoteDb;
 
     constructor() {
         this.localDb = new PouchDB('dishes');
         this.remoteDb = new PouchDB('http://localhost:5984/dishes');
+
+        this.currentDb = this.remoteDb;
     }
 
     getDishes(): Observable<Dish[]> {
         return new Observable((observer: Observer<any>) => {
-            this.localDb.allDocs({ include_docs: true })
-                .then(doc => {
-                    observer.next(doc);
+            this.currentDb.allDocs({ include_docs: true })
+                .then((result: IPouchDBAllDocsResult) => {
+                    // map puchDb result to an array of dishes
+                    let dishes = result.rows.map((row: any): Dish => {
+                        return {
+                            id: row.doc._id,
+                            name: row.doc.name
+                        };
+                    });
+
+                    observer.next(dishes);
                     observer.complete();
                 })
                 .catch(error => {
@@ -30,10 +45,64 @@ export class DishPouchService {
 
     createDish(data: any): Observable<Dish> {
         return new Observable((observer: Observer<any>) => {
-            this.localDb.put(data)
-                .then(doc => {
-                    observer.next(doc);
-                    observer.complete();
+            this.currentDb.put(Object.assign({ _id: 'dish-' + (new Date().getTime()) }, data))
+                .then((result: IPouchDBPutResult) => {
+                    // after adding the new dish, get its data by another get()
+                    this.currentDb.get(result.id)
+                        .then((result: IPouchDBGetResult) => {
+                            let dish = {
+                                id: result._id,
+                                name: data.name
+                            };
+
+                            observer.next(dish);
+                            observer.complete();
+                        });
+                })
+                .catch(error => {
+                    observer.error(error);
+                });
+        });
+    }
+
+    updateDish(data: any): Observable<Dish> {
+        return new Observable((observer: Observer<any>) => {
+            this.currentDb.get(data.dish.id)
+                .then((result: IPouchDBGetResult) => {
+                    // after getting the dish, update it
+                    this.currentDb.put(Object.assign(result, { name: data.newName }))
+                        .then((result: IPouchDBPutResult) => {
+                            // after updating the dish, get the fresh one from database
+                            this.currentDb.get(result.id)
+                                .then((result: IPouchDBGetResult) => {
+                                    let dish = {
+                                        id: result._id,
+                                        name: data.name
+                                    };
+
+                                    observer.next(dish);
+                                    observer.complete();
+                                });
+                        });
+                })
+                .catch(error => {
+                    observer.error(error);
+                });
+        });
+    }
+
+    deleteDish(dish: Dish) {
+        return new Observable((observer: Observer<any>) => {
+            this.currentDb.get(dish.id)
+                .then((result: IPouchDBGetResult) => {
+                    // after getting the dish, remove it
+                    this.currentDb.remove(result)
+                        .then((result: IPouchDBRemoveResult) => {
+                            observer.next({
+                                deletedId: result.id
+                            });
+                            observer.complete();
+                        });
                 })
                 .catch(error => {
                     observer.error(error);

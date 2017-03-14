@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Observable} from "rxjs";
-import {DishService} from "../dishes/dish.service";
+import {DishPouchService} from "../dishes/dish-pouch.service";
 
 import * as actions from '../shared/actions';
 
 @Injectable()
 export class AppEffects {
 
-    constructor(private actions$: Actions, private dishService: DishService) { }
+    constructor(private actions$: Actions, private dishService: DishPouchService) { }
 
     @Effect() getDishesEffects$ = this.actions$
         .ofType(actions.GET_DISHES)
