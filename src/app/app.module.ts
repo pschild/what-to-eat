@@ -11,7 +11,6 @@ import {StoreModule} from "@ngrx/store";
 import {reducer} from "./shared/reducers";
 import {AppEffects} from "./shared/effects";
 import {EffectsModule} from "@ngrx/effects";
-import {DishService} from "./dishes/dish.service";
 import {DishPouchService} from "./dishes/dish-pouch.service";
 
 @NgModule({
@@ -29,7 +28,7 @@ import {DishPouchService} from "./dishes/dish-pouch.service";
         StoreModule.provideStore(reducer),
         EffectsModule.run(AppEffects)
     ],
-    providers: [DishService, DishPouchService],
+    providers: [DishPouchService],
     bootstrap: [AppComponent]
 })
 export class AppModule{ }

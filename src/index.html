@@ -3,12 +3,24 @@
 <head>
     <meta charset="utf-8">
     <title>WhatToEat</title>
-    <base href="/">
+    <base href="./">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
 <app-root>Loading...</app-root>
+
+<script type="application/javascript">
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(function (reg) {
+                console.log('Service Worker registered', reg);
+            })
+            .catch(function (err) {
+                console.error('Service Worker NOT registered!', err);
+            });
+    }
+</script>
 </body>
 </html>

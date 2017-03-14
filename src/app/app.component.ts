@@ -4,17 +4,14 @@ import {AppState} from "./shared/reducers";
 import {getDishes} from "./dishes/dishes.actions";
 import {DishPouchService} from "./dishes/dish-pouch.service";
 
-import * as PouchDB from 'pouchdb';
-
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    providers: [DishPouchService]
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
 
-    constructor(private store: Store<AppState>, private pouchService: DishPouchService) { }
+    constructor(private store: Store<AppState>) { }
 
     ngOnInit(): void {
         this.store.dispatch(getDishes());

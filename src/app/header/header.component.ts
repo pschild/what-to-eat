@@ -8,13 +8,14 @@ import {Observable} from "rxjs";
 })
 export class HeaderComponent implements OnInit {
 
-    private onlineOfflineCls = 'online';
+    private onlineOfflineCls;
 
     constructor() {
     }
 
     ngOnInit() {
         this.addNetworkStatusChangeListeners();
+        this.setNetworkStatusClass(navigator.onLine);
     }
 
     addNetworkStatusChangeListeners() {
@@ -22,12 +23,16 @@ export class HeaderComponent implements OnInit {
         let online = Observable.fromEvent(window, 'online');
 
         offline.subscribe(() => {
-            this.onlineOfflineCls = 'offline';
+            this.setNetworkStatusClass(navigator.onLine);
         });
 
         online.subscribe(() => {
-            this.onlineOfflineCls = 'online';
+            this.setNetworkStatusClass(navigator.onLine);
         });
+    }
+
+    setNetworkStatusClass(online) {
+        this.onlineOfflineCls = online ? 'online' : 'offline';
     }
 
 }

@@ -8,6 +8,9 @@ import {
     IPouchDBRemoveResult
 } from "../shared/pouch-db-interfaces";
 
+const localDbName = 'dishes';
+const remoteDbName = 'http://localhost:5984/dishes';
+
 @Injectable()
 export class DishPouchService {
 
@@ -16,10 +19,15 @@ export class DishPouchService {
     private remoteDb;
 
     constructor() {
-        this.localDb = new PouchDB('dishes');
-        this.remoteDb = new PouchDB('http://localhost:5984/dishes');
 
-        this.currentDb = this.remoteDb;
+        this.localDb = new PouchDB(localDbName);
+        this.remoteDb = new PouchDB(remoteDbName);
+
+        this.currentDb = navigator.onLine ? this.remoteDb : this.localDb;
+        if (navigator.onLine) {
+            this.synchronizeDatabases();
+        }
+
         this.addNetworkStatusChangeListeners();
     }
 
@@ -33,20 +41,24 @@ export class DishPouchService {
 
         online.subscribe(() => {
             this.currentDb = this.remoteDb;
-            PouchDB.sync('dishes', 'http://localhost:5984/dishes')
-                .on('change', function (info) {
-                    console.log('change', info);
-                }).on('paused', function (err) {
-                    console.log('paused', err);
-                }).on('active', function () {
-                    console.log('active');
-                }).on('denied', function (err) {
-                    console.log('denied', err);
-                }).on('complete', function (info) {
-                    console.log('complete', info);
-                }).on('error', function (err) {
-                    console.log('error', err);
-                });
+            this.synchronizeDatabases();
+        });
+    }
+
+    synchronizeDatabases() {
+        PouchDB.sync(localDbName, remoteDbName)
+        .on('change', function (info) {
+            console.log('change', info);
+        }).on('paused', function (err) {
+            console.log('paused', err);
+        }).on('active', function () {
+            console.log('active');
+        }).on('denied', function (err) {
+            console.log('denied', err);
+        }).on('complete', function (info) {
+            console.log('complete', info);
+        }).on('error', function (err) {
+            console.log('error', err);
         });
     }
 
