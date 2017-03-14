@@ -1,15 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+    private onlineOfflineCls = 'online';
 
-  ngOnInit() {
-  }
+    constructor() {
+    }
+
+    ngOnInit() {
+        let offline = Observable.fromEvent(window, 'offline');
+        let online = Observable.fromEvent(window, 'online');
+
+        offline.subscribe(() => {
+            this.onlineOfflineCls = 'offline';
+        });
+
+        online.subscribe(() => {
+            this.onlineOfflineCls = 'online';
+        });
+    }
 
 }

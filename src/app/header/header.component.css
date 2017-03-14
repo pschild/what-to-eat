@@ -2,3 +2,15 @@ header {
     padding: 10px;
     background-color: #ccc;
 }
+
+header.online {
+    background-color: #009728;
+}
+
+header.offline {
+    background-color: #970003;
+}
+
+header.online a, header.offline a {
+    color: #fff;
+}
